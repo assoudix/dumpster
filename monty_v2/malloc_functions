@@ -1,26 +1,26 @@
 #include "monty.h"
 
 /**
- * _calloc - concatenate tw strings specially
- * @nmemb: number of elements
- * @size: type of elements
+ * _calloc - same as calloc
+ * @blocks: number of blocks to be initialized
+ * @size: size of each element
  * Return: nothing
  */
-void *_calloc(unsigned int nmemb, unsigned int size)
+void *_calloc(unsigned int blocks, size_t size)
 {
 	void *p = NULL;
 	unsigned int i;
 
-	if (nmemb == 0 || size == 0)
+	if (blocks == 0 || size == 0)
 	{
 		return (NULL);
 	}
-	p = malloc(nmemb * size);
+	p = malloc(blocks * size);
 	if (p == NULL)
 	{
 		return (NULL);
 	}
-	for (i = 0; i < (nmemb * size); i++)
+	for (i = 0; i < (blocks * size); i++)
 	{
 		*((char *)(p) + i) = 0;
 	}
@@ -34,6 +34,7 @@ void *_calloc(unsigned int nmemb, unsigned int size)
  * Return: nothing
  */
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
+
 {
 	char *p = NULL;
 	unsigned int i;

@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 	}
 	while (fgets(global_var.buffer, 256, global_var.file))
 	{
-		lines[0] = _strtoky(global_var.buffer, " \t\n");
+		lines[0] = strtok_(global_var.buffer, " \t\n");
 		if (lines[0] && lines[0][0] != '#')
 		{
 			f = get_opcodes(lines[0]);
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
 				fclose(global_var.file);
 				exit(EXIT_FAILURE);
 			}
-			global_var.argument = _strtoky(NULL, " \t\n");
+			global_var.argument = strtok_(NULL, " \t\n");
 			f(&global_var.stack, global_var.line);
 		}
 		global_var.line++;
