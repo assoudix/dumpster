@@ -27,26 +27,25 @@ struct stack_s *next;
 } stack_t;
 
 /**
- * struct globals - global structure to use in the functions
- * @lifo: is stack or queue
- * @cont: current line
- * @arg: second parameter inside the current line
- * @head: doubly linked list
- * @fd: file descriptor
- * @buffer: input text
+ * struct global_variable_structure - global structure to use in the functions
+ * @file: .m file where monty is stored
+ * @line: the number of the line parsed by fgets, used for errors
+ * @argument: the command opcode or value inside the line from strtok
+ * @stack: stack where values will be stored
+ * @buffer: temporary buffer where the line is stored using fgets
  *
  * Description: doubly linked list node structure
  * for stack, queues, LIFO, FIFO Holberton project
  */
-typedef struct globals
+
+typedef struct global_variable_structure
 {
-int lifo;
-unsigned int cont;
-char  *arg;
-stack_t *head;
-FILE *fd;
+unsigned int line;
+FILE *file;
 char *buffer;
-} global_t;
+char  *argument;
+stack_t *stack;
+} everywhere_t;
 
 /**
  * struct instruction_s - opcode and its function
@@ -62,7 +61,7 @@ char *opcode;
 void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
-extern global_t vglo;
+extern everywhere_t global_var;
 
 /* opcode_instructuions*/
 void _push(stack_t **stack, unsigned int line_number);
@@ -94,7 +93,6 @@ void *_calloc(unsigned int nmemb, unsigned int size);
 int _strcmp(char *s1, char *s2);
 
 /* doubly linked list functions */
-stack_t *add_dnodeint_end(stack_t **head, const int n);
 stack_t *add_dnodeint(stack_t **head, const int n);
 void free_dlistint(stack_t *head);
 

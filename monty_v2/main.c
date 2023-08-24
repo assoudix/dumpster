@@ -1,24 +1,7 @@
 #include "monty.h"
 
-global_t vglo;
+everywhere_t global_var;
 
-
-
-/**
- * start_vglo - initializes the global variables
- *
- * @fd: file descriptor
- * Return: no return
- */
-void start_vglo(FILE *fd)
-{
-	vglo.lifo = 1;
-	vglo.cont = 1;
-	vglo.arg = NULL;
-	vglo.head = NULL;
-	vglo.fd = fd;
-	vglo.buffer = NULL;
-}
 
 /**
  * check_input - checks if the file exists and if the file can
@@ -59,47 +42,42 @@ FILE *check_input(int argc, char *argv[])
 int main(int argc, char *argv[])
 {
 	void (*f)(stack_t **stack, unsigned int line_number);
-	FILE *fd;
 	size_t size = 256;
-	/*ssize_t nlines = 0;*/
 	char *lines[2] = {NULL, NULL};
 
-	fd = check_input(argc, argv);
-	start_vglo(fd);
-	/*nlines = getline(&vglo.buffer, &size, fd);*/
-	
-vglo.buffer = (char *)malloc(size);
-    if (vglo.buffer == NULL) {
-        fprintf(stderr, "Memory allocation failed.\n");
-        fclose(vglo.fd);
-        exit(EXIT_FAILURE);
-    }
-
-	while (fgets(vglo.buffer, 256, fd))
+	global_var.line = 1;
+	global_var.argument = NULL;
+	global_var.stack = NULL;
+	global_var.file = check_input(argc, argv);
+	global_var.buffer = (char *)malloc(size);
+	if (global_var.buffer == NULL)
 	{
-		lines[0] = _strtoky(vglo.buffer, " \t\n");
+		fprintf(stderr, "Memory allocation failed.\n");
+		fclose(global_var.file);
+		exit(EXIT_FAILURE);
+	}
+	while (fgets(global_var.buffer, 256, global_var.file))
+	{
+		lines[0] = _strtoky(global_var.buffer, " \t\n");
 		if (lines[0] && lines[0][0] != '#')
 		{
 			f = get_opcodes(lines[0]);
 			if (!f)
 			{
-				fprintf(stderr, "L%u: ", vglo.cont);
+				fprintf(stderr, "L%u: ", global_var.line);
 				fprintf(stderr, "unknown instruction %s\n", lines[0]);
-				free_dlistint(vglo.head);
-				free(vglo.buffer);
-				fclose(vglo.fd);
+				free_dlistint(global_var.stack);
+				free(global_var.buffer);
+				fclose(global_var.file);
 				exit(EXIT_FAILURE);
 			}
-			vglo.arg = _strtoky(NULL, " \t\n");
-			f(&vglo.head, vglo.cont);
+			global_var.argument = _strtoky(NULL, " \t\n");
+			f(&global_var.stack, global_var.line);
 		}
-		/*nlines = getline(&vglo.buffer, &size, fd);*/
-		vglo.cont++;
+		global_var.line++;
 	}
-
-	free_dlistint(vglo.head);
-	free(vglo.buffer);
-	fclose(vglo.fd);
-
+	free_dlistint(global_var.stack);
+	free(global_var.buffer);
+	fclose(global_var.file);
 	return (0);
 }

@@ -1,43 +1,5 @@
 #include "monty.h"
 
-/**
- *add_dnodeint_end - add a note at the end of the doubly link list
- *@head: first position of linked list
- *@n: data to store
- *Return: a doubly linked list
- */
-stack_t *add_dnodeint_end(stack_t **head, const int n)
-{
-	stack_t *temp, *aux;
-
-	if (head == NULL)
-		return (NULL);
-	temp = malloc(sizeof(stack_t));
-	if (!temp)
-	{
-		fprintf(stderr, "Error: malloc failed\n");
-		free_dlistint(vglo.head);
-		free(vglo.buffer);
-		fclose(vglo.fd);
-		exit(EXIT_FAILURE);
-	}
-	temp->n = n;
-	/*Careful with the first time*/
-	if (*head == NULL)
-	{
-		temp->next = *head;
-		temp->prev = NULL;
-		*head = temp;
-		return (*head);
-	}
-	aux = *head;
-	while (aux->next)
-		aux = aux->next;
-	temp->next = aux->next;
-	temp->prev = aux;
-	aux->next = temp;
-	return (aux->next);
-}
 
 /**
  *add_dnodeint - add a note at the begining of the doubly link list
@@ -55,13 +17,13 @@ stack_t *add_dnodeint(stack_t **head, const int n)
 	if (!temp)
 	{
 		fprintf(stderr, "Error: malloc failed\n");
-		free_dlistint(vglo.head);
-		free(vglo.buffer);
-		fclose(vglo.fd);
+		free_dlistint(global_var.stack);
+		free(global_var.buffer);
+		fclose(global_var.file);
 		exit(EXIT_FAILURE);
 	}
 	temp->n = n;
-	/*Careful with the first time*/
+
 	if (*head == NULL)
 	{
 		temp->next = *head;
